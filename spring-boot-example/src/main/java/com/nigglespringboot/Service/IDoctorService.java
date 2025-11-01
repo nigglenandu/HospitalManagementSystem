@@ -3,6 +3,7 @@ package com.nigglespringboot.Service;
 import com.nigglespringboot.Entity.DoctorEntity;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface IDoctorService {
 
@@ -11,5 +12,5 @@ public interface IDoctorService {
 
     public List<DoctorEntity> getAllDoctors();
 
-    public DoctorEntity getDoctorById(Integer id);
+    public Optional<DoctorEntity> getDoctorById(Integer id);
 }

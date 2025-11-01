@@ -1,38 +1,44 @@
 package com.nigglespringboot.Controller;
 
-import com.nigglespringboot.Entity.DoctorEntity;
 import com.nigglespringboot.Entity.PatientEntity;
 import com.nigglespringboot.Service.IPatientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/doctor")
 public class DoctorController {
 
-    @Autowired
-    private IPatientService patientService;
+    private final IPatientService patientService;
 
-    @PostMapping("savepatient")
-    public PatientEntity savepatient(@RequestBody PatientEntity patientEntity){
-        PatientEntity pe = patientService.savePatient(patientEntity);
-        return pe;
+    @Autowired
+    public DoctorController(IPatientService patientService) {
+        this.patientService = patientService;
     }
 
-   @GetMapping("getpatients")
-    public List<PatientEntity> getAllPatients(PatientEntity patientEntity){
-       List<PatientEntity> list = patientService.getAllPatients();
-       return list;
-   }
+    @PostMapping("/patients")
+    public ResponseEntity<PatientEntity> createPatient(@RequestBody PatientEntity patientEntity) {
+        PatientEntity savedPatient = patientService.savePatient(patientEntity);
+        return ResponseEntity.ok(savedPatient);
+    }
 
-   @GetMapping("/getpatientbyid/{id}")
-    public ResponseEntity<PatientEntity> getPatientById(@PathVariable Integer id){
-       PatientEntity pe = patientService.getPatientById(id);
-       return ResponseEntity.ok(pe);
-   }
+    @GetMapping("/patients")
+    public ResponseEntity<List<PatientEntity>> getAllPatients() {
+        List<PatientEntity> patients = patientService.getAllPatients();
+        if (patients.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(patients);
+    }
 
-
+    @GetMapping("/patients/{id}")
+    public ResponseEntity<PatientEntity> getPatientById(@PathVariable Integer id) {
+        PatientEntity patient = patientService.getPatientById(id);
+        if (patient == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(patient);
+    }
 }

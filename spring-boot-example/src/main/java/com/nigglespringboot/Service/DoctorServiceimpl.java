@@ -2,7 +2,6 @@ package com.nigglespringboot.Service;
 
 import com.nigglespringboot.Entity.DoctorEntity;
 import com.nigglespringboot.Repository.DoctorRepo;
-import com.nigglespringboot.Repository.PatientRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,12 +24,8 @@ public class DoctorServiceimpl implements IDoctorService{
         return doctorRepo.findAll();
     }
 
-    public DoctorEntity getDoctorById(Integer id){
-        Optional<DoctorEntity> optional = doctorRepo.findById(id);
-        return optional.isPresent() ? optional.get():null;
+    public Optional<DoctorEntity> getDoctorById(Integer id){
+        return doctorRepo.findById(id);
     }
-
-
-
 }
 

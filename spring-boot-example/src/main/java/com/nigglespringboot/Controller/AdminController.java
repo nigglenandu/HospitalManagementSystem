@@ -12,47 +12,45 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/admin")
 public class AdminController {
 
-    @Autowired
-    private IDoctorService doctorService;
+    private final IDoctorService doctorService;
+    private final IReceptionService receptionService;
+    private final IPatientService patientService;
+    private final IAppointmentService appointmentService;
 
-    @Autowired
-    private IReceptionService receptionService;
-
-    @Autowired
-    private IPatientService patientService;
-
-    @Autowired
-    private IAppointmentService appointmentService;
-
-    @PostMapping("/savedoctorfrmadmin")
-    public DoctorEntity saveDoctor(@RequestBody DoctorEntity doctorEntity){
-      DoctorEntity dt = doctorService.saveDoctor(doctorEntity);
-      return dt;
+    public AdminController(IDoctorService doctorService, IReceptionService receptionService, IPatientService patientService, IAppointmentService appointmentService) {
+        this.doctorService = doctorService;
+        this.receptionService = receptionService;
+        this.patientService = patientService;
+        this.appointmentService = appointmentService;
     }
 
-    @GetMapping("/viewdoctorfrmadmin")
-    public List<DoctorEntity> getAllDoctors(){
-        List<DoctorEntity> list = doctorService.getAllDoctors();
-        return list;
+    @PostMapping("/doctors")
+    public ResponseEntity<DoctorEntity> createDoctor(@RequestBody DoctorEntity doctorEntity) {
+        return ResponseEntity.ok(doctorService.saveDoctor(doctorEntity));
     }
 
-    @GetMapping("/getdoctorbyidfrmadmin/{id}")
-        public ResponseEntity<DoctorEntity> getDoctorById(@PathVariable Integer id){
-        DoctorEntity dt = doctorService.getDoctorById(id);
-        return ResponseEntity.ok(dt);
+    @GetMapping("/doctors")
+    public ResponseEntity<List<DoctorEntity>> getAllDoctors() {
+        return ResponseEntity.ok(doctorService.getAllDoctors());
     }
 
+    @GetMapping("/doctors/{id}")
+    public ResponseEntity<DoctorEntity> getDoctorById(@PathVariable Integer id) {
+        return doctorService.getDoctorById(id)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
 
-    @PostMapping("/addreceptitonfrmadmin")
-    public ReceptionEntity saveReception(@RequestBody ReceptionEntity receptionEntity){
-        ReceptionEntity re = receptionService.saveReception(receptionEntity);
-        return re;
+    @PostMapping("/reception")
+    public ResponseEntity<ReceptionEntity> saveReception(@RequestBody ReceptionEntity receptionEntity){
+        return ResponseEntity.ok(receptionService.saveReception(receptionEntity));
     }
 
     @GetMapping("/getallreceptionsfrmadmin")
@@ -102,6 +100,4 @@ public class AdminController {
         AppointmentEntity ae = appointmentService.getAppointmentById(id);
                 return ResponseEntity.ok(ae);
     }
-
-
 }
