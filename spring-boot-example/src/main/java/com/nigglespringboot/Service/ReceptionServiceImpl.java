@@ -22,9 +22,8 @@ public class ReceptionServiceImpl implements IReceptionService{
         return receptionRepo.findAll();
     }
 
-    public ReceptionEntity getReceptionById(Integer id){
-        Optional<ReceptionEntity> optional = receptionRepo.findById(id);
-        return optional.get();
+    public Optional<ReceptionEntity> getReceptionById(Integer id){
+        return receptionRepo.findById(id);
     }
 
 }

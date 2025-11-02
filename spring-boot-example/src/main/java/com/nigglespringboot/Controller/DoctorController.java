@@ -35,10 +35,8 @@ public class DoctorController {
 
     @GetMapping("/patients/{id}")
     public ResponseEntity<PatientEntity> getPatientById(@PathVariable Integer id) {
-        PatientEntity patient = patientService.getPatientById(id);
-        if (patient == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(patient);
+        return patientService.getPatientById(id)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 }

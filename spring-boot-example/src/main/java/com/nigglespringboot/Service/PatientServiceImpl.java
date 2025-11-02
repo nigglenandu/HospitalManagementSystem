@@ -5,6 +5,7 @@ import com.nigglespringboot.Repository.PatientRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,9 +23,8 @@ public class PatientServiceImpl implements IPatientService {
        return patientRepo.findAll();
     }
 
-    public PatientEntity getPatientById(Integer id){
-        Optional<PatientEntity> optional = patientRepo.findById(id);
-        return optional.isPresent() ? optional.get():null;
+    public Optional<PatientEntity> getPatientById(Integer id){
+        return patientRepo.findById(id);
     }
 
 

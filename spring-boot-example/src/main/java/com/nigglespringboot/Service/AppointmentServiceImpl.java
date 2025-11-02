@@ -23,8 +23,7 @@ public class AppointmentServiceImpl implements IAppointmentService{
         return appointmentRepo.findAll();
     }
 
-    public AppointmentEntity getAppointmentById(Integer id){
-        Optional<AppointmentEntity> optional = appointmentRepo.findById(id);
-        return optional.isPresent()?optional.get():null;
+    public Optional<AppointmentEntity> getAppointmentById(Integer id){
+        return appointmentRepo.findById(id);
     }
 }
