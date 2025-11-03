@@ -29,7 +29,8 @@ public class ReceptionController{
 
     @GetMapping("getappointmentbyid")
     public ResponseEntity<AppointmentEntity> getAppointmentById(@PathVariable Integer id){
-        AppointmentEntity ae = appointmentService.getAppointmentById(id);
-        return ResponseEntity.ok(ae);
+        return appointmentService.getAppointmentById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 }
