@@ -2,31 +2,47 @@ package com.nigglespringboot.Service;
 
 import com.nigglespringboot.Entity.PatientEntity;
 import com.nigglespringboot.Repository.PatientRepo;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 public class PatientServiceImpl implements IPatientService {
+
     @Autowired
     private PatientRepo patientRepo;
 
-    public PatientEntity savePatient(PatientEntity patientEntity){
-        patientRepo.save(patientEntity);
-        return patientEntity;
+    @Override
+    public PatientEntity savePatient(PatientEntity patientEntity) {
+        log.info("Saving new patient: {}", patientEntity);
+        PatientEntity savedPatient = patientRepo.save(patientEntity);
+        log.debug("Patient saved successfully with ID: {}", savedPatient.getId());
+        return savedPatient;
     }
 
-    public List<PatientEntity> getAllPatients(){
-       return patientRepo.findAll();
+    @Override
+    public List<PatientEntity> getAllPatients() {
+        log.info("Fetching all patients");
+        List<PatientEntity> patients = patientRepo.findAll();
+        log.debug("Total patients found: {}", patients.size());
+        return patients;
     }
 
-    public Optional<PatientEntity> getPatientById(Integer id){
-        return patientRepo.findById(id);
+    @Override
+    public Optional<PatientEntity> getPatientById(Integer id) {
+        log.info("Fetching patient by ID: {}", id);
+        Optional<PatientEntity> patient = patientRepo.findById(id);
+
+        if (patient.isPresent()) {
+            log.debug("Patient found: {}", patient.get());
+        } else {
+            log.warn("No patient found with ID: {}", id);
+        }
+
+        return patient;
     }
-
-
-
 }
